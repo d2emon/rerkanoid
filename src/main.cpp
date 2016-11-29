@@ -1,15 +1,18 @@
 #include <SFML/Graphics.hpp>
+#include "settings.hpp"
 
 int main()
 {
     // Create the main window
-    sf::RenderWindow app(sf::VideoMode(800, 600), "SFML window");
+    sf::RenderWindow app(sf::VideoMode(winSize[0], winSize[1]), gameTitle);
 
     // Load a sprite to display
-    sf::Texture texture;
-    if (!texture.loadFromFile("cb.bmp"))
+    int backgroundId = rand() % backgroundsCount;
+
+    sf::Texture tBackground;
+    if (!tBackground.loadFromFile(backgrounds[backgroundId]))
         return EXIT_FAILURE;
-    sf::Sprite sprite(texture);
+    sf::Sprite sBackground(tBackground);
 
 	// Start the game loop
     while (app.isOpen())
@@ -19,7 +22,8 @@ int main()
         while (app.pollEvent(event))
         {
             // Close window : exit
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed ||
+                (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
                 app.close();
         }
 
@@ -27,7 +31,7 @@ int main()
         app.clear();
 
         // Draw the sprite
-        app.draw(sprite);
+        app.draw(sBackground);
 
         // Update the window
         app.display();
