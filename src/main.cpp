@@ -1,6 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include "settings.hpp"
 
+bool isCollide(sf::Sprite s1, sf::Sprite s2)
+{
+    return s1.getGlobalBounds().intersects(s2.getGlobalBounds());
+}
+
 int main()
 {
     srand(time(0));
@@ -44,6 +49,9 @@ int main()
     sf::Sprite sPaddle(tPaddle);
     sPaddle.setPosition(300, 440);
 
+    float dx = 6;
+    float dy = 5;
+
 	// Start the game loop
     while (app.isOpen())
     {
@@ -56,6 +64,28 @@ int main()
                 (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
                 app.close();
         }
+
+        sBall.move(dx, 0);
+        for(int i=0; i<n; i++)
+            if(isCollide(sBall, sBlock[i]))
+            {
+                sBlock[i].setPosition(-100, 0);
+                dx = -dx;
+            }
+
+        sBall.move(0, dy);
+        for(int i=0; i<n; i++)
+            if(isCollide(sBall, sBlock[i]))
+            {
+                sBlock[i].setPosition(-100, 0);
+                dy = -dy;
+            }
+
+        sf::Vector2f b = sBall.getPosition();
+        if(b.x < 0 || b.x > 520)
+            dx = -dx;
+        if(b.y < 0 || b.y > 450)
+            dy = -dy;
 
         // Clear screen
         app.clear();
