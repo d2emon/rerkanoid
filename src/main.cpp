@@ -87,6 +87,14 @@ int main()
         if(b.y < 0 || b.y > 450)
             dy = -dy;
 
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+            sPaddle.move(6, 0);
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            sPaddle.move(-6, 0);
+
+        if(isCollide(sPaddle, sBall))
+            dy = -(rand() % 5 + 2);
+
         // Clear screen
         app.clear();
 
