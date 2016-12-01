@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <time.h>
 #include "settings.hpp"
 
 bool isCollide(sf::Sprite s1, sf::Sprite s2)
@@ -25,15 +26,15 @@ int main()
     sf::Texture tBlock;
     if (!tBlock.loadFromFile(blocks[0]))
         return EXIT_FAILURE;
-    sf::Sprite sBlock[1000];
+    sf::Sprite sBlock[blocksCount];
     // (tBlock);
 
     int n = 0;
-    for(int i=1; i<10; i++)
-        for(int j=1; j<10; j++)
+    for(int i=1; i<blockCols; i++)
+        for(int j=1; j<blockRows; j++)
         {
             sBlock[n].setTexture(tBlock);
-            sBlock[n].setPosition(i * 43, j * 20);
+            sBlock[n].setPosition(i * blockW, j * blockH);
             n++;
         }
 
@@ -41,16 +42,16 @@ int main()
     if (!tBall.loadFromFile(ball))
         return EXIT_FAILURE;
     sf::Sprite sBall(tBall);
-    sBall.setPosition(300, 300);
+    sBall.setPosition(ballPos[0], ballPos[1]);
 
     sf::Texture tPaddle;
     if (!tPaddle.loadFromFile(paddle))
         return EXIT_FAILURE;
     sf::Sprite sPaddle(tPaddle);
-    sPaddle.setPosition(300, 440);
+    sPaddle.setPosition(paddlePos[0], paddlePos[1]);
 
-    float dx = 6;
-    float dy = 5;
+    float dx = ballSpeed[0];
+    float dy = ballSpeed[1];
 
 	// Start the game loop
     while (app.isOpen())
@@ -69,7 +70,7 @@ int main()
         for(int i=0; i<n; i++)
             if(isCollide(sBall, sBlock[i]))
             {
-                sBlock[i].setPosition(-100, 0);
+                sBlock[i].setPosition(posNowhere[0], posNowhere[1]);
                 dx = -dx;
             }
 
@@ -77,18 +78,18 @@ int main()
         for(int i=0; i<n; i++)
             if(isCollide(sBall, sBlock[i]))
             {
-                sBlock[i].setPosition(-100, 0);
+                sBlock[i].setPosition(posNowhere[0], posNowhere[1]);
                 dy = -dy;
             }
 
         sf::Vector2f b = sBall.getPosition();
-        if(b.x < 0 || b.x > 520)
+        if(b.x < 0 || b.x > N)
             dx = -dx;
-        if(b.y < 0 || b.y > 450)
+        if(b.y < 0 || b.y > M)
             dy = -dy;
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            sPaddle.move(6, 0);
+            sPaddle.move( 6, 0);
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
             sPaddle.move(-6, 0);
 
